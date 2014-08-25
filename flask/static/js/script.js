@@ -14,12 +14,20 @@ $(document).ready(function(){
 //send JSON to add cell to Flask
 $(document).ready(function(){
 	$('.cell').bind('click', function(){
-		$.getJSON($SCRIPT_ROOT + '/add_point', {
-			row: $(this).closest('td').index(),
-			col: $(this).closest('tr').index()
-		}, function(data){
-			console.log(data.result);
-		});
+		var r = $(this).closest('td').index();
+		var c = $(this).closest('tr').index();
+		if($(this).attr('hit')){
+			$.getJSON($SCRIPT_ROOT + '/add_point', {
+				row: $(this).closest('td').index(),
+				col: $(this).closest('tr').index()
+			}, function(data){
+				console.log(data.result);
+			});
+		else{
+			$.getJSON($SCRIPT_ROOT + '/delete_point', {
+				row: $(this)
+			});
+		}
 	});
 });
 

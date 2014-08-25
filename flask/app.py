@@ -27,16 +27,17 @@ app = Flask(__name__)
 @app.route('/add_point')
 def add_point():
 	global point_index
-	x = request.args.get('col', 0, type=int)
-	y = request.args.get('row', 0, type=int)
-	points.append([point_index, Point(x, y)])
-	point_index += 1
-	return jsonify(result=str(y) + '_' + str(x)) #find adjacents and add to segments
+	x = request.args.get('row', 0, type=int)
+	y = request.args.get('col', 0, type=int)
+	points.append(Point(x, y))
+	return jsonify(result='add ' + str(x) + '_' + str(y)) #find adjacents and add to segments
 
 @app.route('/remove_point')
 def remove_point():
-	x = request.args.get('col', 0, type=int)
-	y = request.args.get('row', 0, type=int)
+	x = request.args.get('row', 0, type=int)
+	y = request.args.get('col', 0, type=int)
+	points.remove(Point(x, y))
+	return jsonify(result='remove ' + str(x) + '_' + str(y))
 
 @app.route('/')
 def build_grid():
