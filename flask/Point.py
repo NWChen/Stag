@@ -3,5 +3,3 @@ class Point(object):
 		self.x = x
 		self.y = y
 
-	def __repr__(self):
-		reeturn str(self.x) + '_' + str(self.y)

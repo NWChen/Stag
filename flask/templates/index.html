@@ -9,11 +9,12 @@
     <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
     -->
     <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script type=text/javascript>$SCRIPT_ROOT = {{ request.script_root|tojson|safe }};</script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
     <!--<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>-->
     <script src="{{ url_for('static', filename='js/script.js') }}"></script>
   </head>
-  <body onload="resize()">
+  {% block body %}
 
     <div class="container">
       <div class="col-lg-6">Rows: {{rows}}</div>
@@ -32,7 +33,11 @@
           </tr>
         {% endfor %}
       </table>
-
+      
     </div>
-  </body>
+
+    <canvas class="grid-canvas">
+
+    </canvas>
+  {% endblock %}
 </html>

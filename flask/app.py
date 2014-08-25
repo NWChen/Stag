@@ -13,25 +13,30 @@ if __name__ == '__main__':
 '''
 
 import os
-from flask import Flask, redirect, url_for, session
+from flask import Flask, redirect, url_for, session, jsonify
 from flask import render_template
 from flask import request
 
-app = Flask(__name__)
-points = {}
-segments = {}
+from Point import Point
+
+points = []
+segments = []
 point_index = 0
+app = Flask(__name__)
 
 @app.route('/add_point')
 def add_point():
+	global point_index
 	x = request.args.get('col', 0, type=int)
 	y = request.args.get('row', 0, type=int)
-	points[str(x) + '_' + str(y)] = [point_index, Point(x, y)]
+	points.append([point_index, Point(x, y)])
 	point_index += 1
+	return jsonify(result=str(y) + '_' + str(x)) #find adjacents and add to segments
 
-	#find adjacents and add to segments
-
-	return
+@app.route('/remove_point')
+def remove_point():
+	x = request.args.get('col', 0, type=int)
+	y = request.args.get('row', 0, type=int)
 
 @app.route('/')
 def build_grid():
