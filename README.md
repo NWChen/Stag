@@ -1,0 +1,1 @@
+simple trajectory autonomous generator

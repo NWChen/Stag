@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>STAG</title>
+    <!--
+    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    -->
+    <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <!--<script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>-->
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </head>
+  <body onload="resize()">
+
+    <div class="container">
+      <div class="col-lg-6">Rows: {{rows}}</div>
+      <div class="col-lg-6">Columns: {{cols}}</div>
+    </div>
+
+    <div class="container">
+
+      <!--JINJA2 AUTOGEN-->
+      <table class="table table-bordered">
+        {% for row in rows %}
+          <tr class="row-grid">
+          {% for col in cols %}
+            <td class="cell"></td>
+          {% endfor %}
+          </tr>
+        {% endfor %}
+      </table>
+
+    </div>
+  </body>
+</html>
