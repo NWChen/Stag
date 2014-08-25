@@ -36,7 +36,8 @@ def add_point():
 def remove_point():
 	x = request.args.get('row', 0, type=int)
 	y = request.args.get('col', 0, type=int)
-	points.remove(Point(x, y))
+	if Point(x, y) in points:
+		points.remove(Point(x, y))
 	return jsonify(result='remove ' + str(x) + '_' + str(y))
 
 @app.route('/')
