@@ -13,11 +13,9 @@ if __name__ == '__main__':
 '''
 
 import os
-from flask import Flask, redirect, url_for, session, jsonify
-from flask import render_template
-from flask import request
-
+from flask import Flask, redirect, url_for, session, jsonify, request, render_template
 from Point import Point
+from Segment import Segment
 
 points = []
 segments = []
@@ -30,7 +28,7 @@ def add_point():
 	x = request.args.get('row', 0, type=int)
 	y = request.args.get('col', 0, type=int)
 	points.append(Point(x, y))
-	return jsonify(result='add ' + str(x) + '_' + str(y)) #find adjacents and add to segments
+	return jsonify(result='add (' + str(x) + ', ' + str(y) + ')') #find adjacents and add to segments
 
 @app.route('/remove_point')
 def remove_point():
@@ -38,7 +36,7 @@ def remove_point():
 	y = request.args.get('col', 0, type=int)
 	if Point(x, y) in points:
 		points.remove(Point(x, y))
-	return jsonify(result='remove ' + str(x) + '_' + str(y))
+	return jsonify(result='remove (' + str(x) + ', ' + str(y) + ')')
 
 @app.route('/')
 def build_grid():
