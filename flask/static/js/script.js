@@ -11,7 +11,7 @@ $(document).ready(function(){
 	});
 });
 
-//send JSON to add cell to Flask
+//add cell whenever hit; remove cell whenever un-hit
 $(document).ready(function(){
 	$('.cell').bind('click', function(){
 		var r = $(this).closest('td').index();
@@ -28,11 +28,18 @@ $(document).ready(function(){
 	});
 });
 
-//temp canvas modifier
+//illustrate lines between cells
 $(document).ready(function(){
-	var context = $('#grid-canvas')[0].getContext('2d');
-	context.beginPath();
-	context.moveTo(100, 150);
-	context.lineTo(450, 50);
-	context.stroke();
+	var segments = []
+	$.getJSON($SCRIPT_ROOT + '/get_segments', {}, function(data){
+		segments = 
+	});
 });
+
+function draw(fromCell, toCell){
+	var context = $('.grid-canvas')[0].getContext('2d');
+	context.beginPath();
+	context.moveTo($(fromCell).parent().children().index($(fromCell)), $(fromCell).parent().parent().children().index($(fromCell).parent()));
+	context.lineTo($(toCell).parent().children().index($(toCell)), $(toCell).parent().parent().children().index($(toCell).parent()));
+	context.stroke();
+}

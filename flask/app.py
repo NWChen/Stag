@@ -19,8 +19,12 @@ from Segment import Segment
 
 points = []
 segments = []
-point_index = 0
 app = Flask(__name__)
+
+def segmentize():
+	segments = []
+	for index in range(0, len(points)-1):
+		segments.append(Segment(points[index], points[index+1]))
 
 @app.route('/add_point')
 def add_point():
@@ -28,14 +32,17 @@ def add_point():
 	x = request.args.get('row', 0, type=int)
 	y = request.args.get('col', 0, type=int)
 	points.append(Point(x, y))
+	segmentize()
 	return jsonify(result='add (' + str(x) + ', ' + str(y) + ')') #find adjacents and add to segments
 
 @app.route('/remove_point')
 def remove_point():
 	x = request.args.get('row', 0, type=int)
 	y = request.args.get('col', 0, type=int)
-	if Point(x, y) in points:
-		points.remove(Point(x, y))
+	for point in points:
+		if point.x==x and point.y==y:
+			points.remove(point)
+	segmentize()
 	return jsonify(result='remove (' + str(x) + ', ' + str(y) + ')')
 
 @app.route('/')
