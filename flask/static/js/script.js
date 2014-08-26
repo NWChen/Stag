@@ -6,30 +6,28 @@ function draw(fromCell, toCell){
 	context.stroke();
 }
 
+//illustrate lines between cells
+function redraw(){
+	$.getJSON($SCRIPT_ROOT + '/get_point_sequence', {pass: 0}, function(data){
+		var points = data.result.split(' ');
+		for(i=0; i<points.length-1; i++){
+			x1 = points[i].substring(1, points[i].indexOf(","));
+			y1 = points[i].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
+			x2 = points[i+1].substring(1, points[i+1].indexOf(","));
+			y2 = points[i+1].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
+			console.log(y1);
+			fromCell = $('#grid').rows[x1].cells[y1];
+			toCell = $('#grid').rows[x2].cells[y2];
+			draw(fromCell, toCell);
+		}
+	});
+}
+
 //size cells
 $(document).ready(function(){
 	var size = $('td').width();
 	$('td').height(size);
 });
-
-//illustrate lines between cells
-function redraw(){
-	var points = [];
-	$.getJSON($SCRIPT_ROOT + '/get_point_sequence', {pass: 0}, function(data){
-		points = data.result; 
-	});
-	console.log(points.length)
-	for(i=0; i<points.length-1; i++){
-		console.log('drawing shit mother fucker ' + i);
-		x1 = points[i].substring(1, points[i].indexOf(","));
-		y1 = points[i].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
-		x2 = points[i+1].substring(1, points[i+1].indexOf(","));
-		y2 = points[i+1].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
-		fromCell = $('#grid').rows[x1].cells[y1];
-		toCell = $('#grid').rows[x2].cells[y2];
-		draw(fromCell, toCell);
-	}
-}
 
 //toggle cell color
 $(document).ready(function(){

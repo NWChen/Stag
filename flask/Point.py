@@ -7,7 +7,7 @@ class Point(object):
 		return self.x==other.x and self.y==other.y 
 
 	def __repr__(self):
-		return "<Point>: (%s, %s)" % (str(self.x), str(self.y))
+		return "<Point>: (%s,%s)" % (str(self.x), str(self.y))
 
 	def __str__(self):
-		return "(%s, %s)" % (str(self.x), str(self.y))
+		return "(%s,%s)" % (str(self.x), str(self.y))
