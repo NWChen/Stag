@@ -45,7 +45,16 @@ table{
 	background: #EEEEEE;
 }
 
-.grid-canvas-overlay{
+#grid{
 	position: absolute;
-	z-index: 3;
+	left: 10px;
+	top: 50px;
+	z-index: 1;
+}
+
+#overlay{
+	position: absolute;
+	left: 10px;
+	top: 50px;
+	z-index: 2;
 }

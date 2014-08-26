@@ -1,13 +1,11 @@
 function draw(fromCell, toCell){
-	console.log("call from " + fromCell + " to " + toCell);
-	var context = $('.grid-canvas')[0].getContext('2d');
-	context.fillRect(10, 10, 10, 10);
-	/*
+	//console.log("call from " + fromCell + " to " + toCell);
+	var context = $('#overlay')[0].getContext('2d');
+	//context.fillRect(10, 10, 10, 10);
 	context.beginPath();
 	context.moveTo($(fromCell).parent().children().index($(fromCell)), $(fromCell).parent().parent().children().index($(fromCell).parent()));
 	context.lineTo($(toCell).parent().children().index($(toCell)), $(toCell).parent().parent().children().index($(toCell).parent()));
 	context.stroke();
-	*/
 }
 
 //illustrate lines between cells
@@ -22,6 +20,7 @@ function redraw(){
 			y2 = parseInt(points[i+1].substring(points[i+1].indexOf(",")+1, points[i+1].indexOf(")")));
 			fromCell = document.getElementById('grid').rows[x1].cells[y1];
 			toCell = document.getElementById('grid').rows[x2].cells[y2];
+			var rekt = element.getBoundingClientRect();
 			draw(fromCell, toCell);
 		}
 	});
