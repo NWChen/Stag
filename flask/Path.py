@@ -4,7 +4,7 @@ class Path(object):
 	def __init__(self):
 		pass
 
-	def add_segment(Segment s):
-		segments.append(s)
+	def add_segment(segment):
+		segments.append(segment)
 
 	
