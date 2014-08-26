@@ -1,23 +1,27 @@
 function draw(fromCell, toCell){
+	console.log("call from " + fromCell + " to " + toCell);
 	var context = $('.grid-canvas')[0].getContext('2d');
+	context.fillRect(10, 10, 10, 10);
+	/*
 	context.beginPath();
 	context.moveTo($(fromCell).parent().children().index($(fromCell)), $(fromCell).parent().parent().children().index($(fromCell).parent()));
 	context.lineTo($(toCell).parent().children().index($(toCell)), $(toCell).parent().parent().children().index($(toCell).parent()));
 	context.stroke();
+	*/
 }
 
 //illustrate lines between cells
+//makeshift code since passing a Python list to a Javascript array is weird
 function redraw(){
 	$.getJSON($SCRIPT_ROOT + '/get_point_sequence', {pass: 0}, function(data){
 		var points = data.result.split(' ');
 		for(i=0; i<points.length-1; i++){
-			x1 = points[i].substring(1, points[i].indexOf(","));
-			y1 = points[i].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
-			x2 = points[i+1].substring(1, points[i+1].indexOf(","));
-			y2 = points[i+1].substring(points[i].indexOf(",")+2, points[i].indexOf(")"));
-			console.log(y1);
-			fromCell = $('#grid').rows[x1].cells[y1];
-			toCell = $('#grid').rows[x2].cells[y2];
+			x1 = parseInt(points[i].substring(1, points[i].indexOf(",")));
+			y1 = parseInt(points[i].substring(points[i].indexOf(",")+1, points[i].indexOf(")")));
+			x2 = parseInt(points[i+1].substring(1, points[i+1].indexOf(",")));
+			y2 = parseInt(points[i+1].substring(points[i+1].indexOf(",")+1, points[i+1].indexOf(")")));
+			fromCell = document.getElementById('grid').rows[x1].cells[y1];
+			toCell = document.getElementById('grid').rows[x2].cells[y2];
 			draw(fromCell, toCell);
 		}
 	});

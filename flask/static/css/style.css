@@ -28,6 +28,10 @@ table{
 	border: 1px solid black;
 }
 
+.container{
+	position: relative;
+}
+
 .cell{
 	background: #DDDDDD;
 	width: 40px;
@@ -39,4 +43,9 @@ table{
 
 .cell:hover{
 	background: #EEEEEE;
+}
+
+.grid-canvas-overlay{
+	position: absolute;
+	z-index: 3;
 }
