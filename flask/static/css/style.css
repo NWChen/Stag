@@ -49,12 +49,15 @@ table{
 	position: absolute;
 	left: 10px;
 	top: 50px;
-	z-index: 1;
+	z-index: 2;
+	opacity: 0.2;
 }
 
 #overlay{
+	width: 1200px;
+	height: 1200px;
 	position: absolute;
 	left: 10px;
 	top: 50px;
-	z-index: 2;
+	z-index: 1;
 }

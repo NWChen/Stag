@@ -1,10 +1,8 @@
-function draw(fromCell, toCell){
-	//console.log("call from " + fromCell + " to " + toCell);
-	var context = $('#overlay')[0].getContext('2d');
-	//context.fillRect(10, 10, 10, 10);
+function draw(x1, y1, x2, y2){
+	context = $('#overlay')[0].getContext('2d');
 	context.beginPath();
-	context.moveTo($(fromCell).parent().children().index($(fromCell)), $(fromCell).parent().parent().children().index($(fromCell).parent()));
-	context.lineTo($(toCell).parent().children().index($(toCell)), $(toCell).parent().parent().children().index($(toCell).parent()));
+	context.moveTo(x1, y1);
+	context.lineTo(x2, y2);
 	context.stroke();
 }
 
@@ -20,8 +18,10 @@ function redraw(){
 			y2 = parseInt(points[i+1].substring(points[i+1].indexOf(",")+1, points[i+1].indexOf(")")));
 			fromCell = document.getElementById('grid').rows[x1].cells[y1];
 			toCell = document.getElementById('grid').rows[x2].cells[y2];
-			var rekt = element.getBoundingClientRect();
-			draw(fromCell, toCell);
+			fromRect = fromCell.getBoundingClientRect();
+			toRect = toCell.getBoundingClientRect();
+			console.log(fromRect.top, fromRect.left, toRect.top, toRect.left);
+			draw((fromRect.top/4)-15, (fromRect.left/7), (toRect.top/4)-15, (toRect.left/7));
 		}
 	});
 }
