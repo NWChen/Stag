@@ -21,7 +21,7 @@ function redraw(){
 			fromRect = fromCell.getBoundingClientRect();
 			toRect = toCell.getBoundingClientRect();
 			console.log(fromRect.top, fromRect.left, toRect.top, toRect.left);
-			draw((fromRect.top/4)-15, (fromRect.left/7), (toRect.top/4)-15, (toRect.left/7));
+			draw((fromRect.top/4)-14, (fromRect.left/7)-2, (toRect.top/4)-14, (toRect.left/7)-2);
 		}
 	});
 }
