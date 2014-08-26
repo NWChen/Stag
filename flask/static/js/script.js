@@ -3,6 +3,7 @@ function draw(x1, y1, x2, y2){
 	context.beginPath();
 	context.moveTo(x1, y1);
 	context.lineTo(x2, y2);
+	context.strokeStyle="#2956B2";
 	context.stroke();
 }
 
@@ -21,7 +22,7 @@ function redraw(){
 			fromRect = fromCell.getBoundingClientRect();
 			toRect = toCell.getBoundingClientRect();
 			console.log(fromRect.top, fromRect.left, toRect.top, toRect.left);
-			draw((fromRect.top/4)-14, (fromRect.left/7)-2, (toRect.top/4)-14, (toRect.left/7)-2);
+			draw((fromRect.top/4)-14, (fromRect.left/7)-1, (toRect.top/4)-14, (toRect.left/7)-1);
 		}
 	});
 }
