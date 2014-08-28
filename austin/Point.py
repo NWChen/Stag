@@ -2,7 +2,8 @@ class Point(object):
 	def __init__(self, x=0, y=0, canvas=None, radius=6):
 		self.x = x
 		self.y = y
-		canvas.create_oval(x-radius, y-radius, x+radius, y+radius, fill="black")
+		if(canvas!=None): 
+			self.dot = canvas.create_oval(x-radius, y-radius, x+radius, y+radius, fill="black")
 
 	def __eq__(self, other):
 		return self.x==other.x and self.y==other.y 
