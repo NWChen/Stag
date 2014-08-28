@@ -4,10 +4,7 @@ class Point(object):
 		self.y = y
 		if(canvas!=None): 
 			self.dot = canvas.create_oval(x-radius, y-radius, x+radius, y+radius, fill="black")
-
-	def __eq__(self, other):
-		return self.x==other.x and self.y==other.y 
-
+			
 	def __repr__(self):
 		return "<Point>: (%s,%s)" % (str(self.x), str(self.y))
 

@@ -25,13 +25,15 @@ class App:
 
 	#callback when left mouse button clicked
 	def click(self, event):
-		temp = self.get_nearest_point(self.x, self.y)
-		print("nearest: ", temp.x, temp.y)
-		self.add_point(self.x, self.y)
+		nearest_point = self.get_nearest_point(self.x, self.y, 100)
+		if nearest_point==None:
+			self.add_point(self.x, self.y)
+		else:
+			self.delete_point(nearest_point.x, nearest_point.y)
 
 	#radar scan for closest point
-	def get_nearest_point(self, x, y):
-		for scan_radius in range(0, self.size):
+	def get_nearest_point(self, x, y, threshold):
+		for scan_radius in range(0, threshold):
 			for theta in range(0, 361):
 				radian = float(theta)*math.pi/180
 				for point in self.points:
@@ -39,7 +41,7 @@ class App:
 					y2 = y+(scan_radius*math.sin(radian))
 					if abs(point.x-x2)<=1 and abs(point.y-y2)<=1:
 						return point
-		return Point(-1, -1)
+		return None
 
 	#add a Point to the canvas and points list
 	def add_point(self, x, y):
@@ -48,10 +50,11 @@ class App:
 		self.num_waypoints += 1
 
 	#delete a Point from the canvas and points list
-	def delete_point(self):
+	def delete_point(self, x, y):
 		for point in self.points:
-			if self.x==point.x and self.y==point.y:
-				print "shit done"
+			nearest_point = self.get_nearest_point(self.x, self.y, self.size)
+			if x==nearest_point.x and y==nearest_point.y:
+				print "deletion at ", x, y
 				self.canvas.delete(point.dot)
 				self.points.remove(point)
 
