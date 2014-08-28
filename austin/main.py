@@ -1,4 +1,5 @@
 from Tkinter import *
+from Point import Point
 
 class App:
 
@@ -10,6 +11,8 @@ class App:
 		self.canvas.pack()
 		self.x = 0
 		self.y = 0
+		self.num_waypoints = 0
+		self.points = []
 
 	def motion(self, event):
 		self.x = event.x
@@ -17,7 +20,16 @@ class App:
 		print self.x, self.y
 
 	def click(self, event):
-		self.canvas.create_rectangle()
+		self.add_point(self.x, self.y)
+
+	def add_point(self, x, y):
+		point = Point(self.x, self.y, self.canvas)
+		self.num_waypoints += 1
+
+	def delete_point(self, x, y):
+		for point in points:
+			if x==point.x and y==point.y:
+				points.remove(point)
 
 	def mainloop(self):
 		tk.mainloop()
