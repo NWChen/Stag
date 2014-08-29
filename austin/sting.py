@@ -1,5 +1,5 @@
 from Tkinter import *
-from Point import Point
+from Waypoint import Waypoint
 from Segment import Segment
 import math
 
@@ -11,7 +11,7 @@ class App:
 		
 		self.tk.bind('<Motion>', self.motion)
 		
-		self.size = 1000
+		self.size = 500
 		self.canvas = Canvas(self.tk, width=self.size, height=self.size, cursor="crosshair", bg="white")
 		self.canvas.bind('<Button-1>', self.canvas_click)
 		self.canvas.grid(row=0, column=0)
@@ -25,12 +25,13 @@ class App:
 		self.scrollbar.config(command=self.listbox.yview)
 		self.delete_buttons = []
 
-		self.tag = 0
 		self.x = 0
 		self.y = 0
-		self.num_waypoints = 0
-		self.points = []
+		self.waypoints = []
+		self.outlines = []
 		self.segments = []
+		self.waypoint_tag = "w0"
+		self.outline_tag = "o0"
 
 	#callback when mouse moves
 	def motion(self, event):
@@ -39,41 +40,41 @@ class App:
 
 	#callback when left mouse button clicked
 	def canvas_click(self, event): 
-		self.add_point(Point(self.x, self.y, self.canvas))
+		self.add_waypoint(Waypoint(self.x, self.y, self.canvas))
 
-	#highlight a point
-	def highlight(self, point):
+	#outline a point
+	def gen_outline(self, point):
 		bound = 8
 		circle = self.canvas.create_oval(point.x-bound, point.y-bound, point.x+bound, point.y+bound, outline='red', width=bound/4)
-		self.canvas.itemconfig(circle, tags=(str(self.tag)))
+		self.canvas.itemconfig(circle, tags=(self.gen_outline_tag()))
 
 	#callback when left mouse button clicked
 	def listbox_click(self, event):
 		click_index = map(int, self.listbox.curselection())
 		if(len(click_index)>0):
-			if self.points[click_index[0]].selected == False:
-				#draw bounding circle
-				self.points[click_index[0]].selected = True
-				self.highlight(self.points[click_index[0]])
-				self.tag += 1
+			if self.waypoints[click_index[0]].selected == False:
+				self.waypoints[click_index[0]].selected = True
+				self.gen_outline(self.waypoints[click_index[0]])
 			else:
-				self.points[click_index[0]].selected = False
-				self.delete_point(self.points[click_index[0]], self.tag)
-				self.tag -= 1
+				self.waypoints[click_index[0]].selected = False
+				self.canvas.delete(self.outlines[click_index[0]])
+				self.outlines.remove(self.outlines[click_index[0]]) 
+				#delete outline
 
-	#add a Point to the canvas and points list
-	def add_point(self, point):
-		radius = 3
-		self.canvas.create_oval(self.x-radius, self.y-radius, self.x+radius, self.y+radius, fill="black")
-		self.points.append(point)
-		self.listbox.insert(END, str(point))
-		self.num_waypoints += 1
+	#add a Waypoint to the canvas and points list
+	def add_waypoint(self, waypoint):
+		RADIUS = 3
+		dot = self.canvas.create_oval(self.x-RADIUS, self.y-RADIUS, self.x+RADIUS, self.y+RADIUS, fill="black")
+		waypoint.tag = self.gen_waypoint_tag()
+		self.canvas.itemconfig(dot, tags=waypoint.tag)
+		self.waypoints.append(waypoint)
+		self.listbox.insert(END, str(waypoint))
 		self.build_segments()
 
-	#delete a Point
-	def delete_point(self, point, tag):
-		self.canvas.delete(str(tag))
-		self.points.remove(point)
+	#delete a Waypoint
+	def delete_point(self, waypoint):
+		self.canvas.delete(self.point_tag)
+		self.points.remove(waypoint)
 		self.listbox.delete(0, END)
 		for point in self.points:
 			self.listbox.insert(END, str(point))
@@ -81,17 +82,20 @@ class App:
 	#segments
 	def build_segments(self):
 		self.canvas.delete("segments")
-		for i in range(0, len(self.points)-1):
-			self.segments.append(Segment(self.points[i], self.points[i+1]))
+		for i in range(0, len(self.waypoints)-1):
+			self.segments.append(Segment(self.waypoints[i], self.waypoints[i+1]))
 		for segment in self.segments:
 			self.canvas.create_line(segment.x1, segment.y1, segment.x2, segment.y2, fill="gray", width=3, tags="segments")
 
-	#tags
-	def get_point_tag(self):
-		return "POINT_" + str(self.point_tag)
+	#build a waypoint tag
+	def gen_waypoint_tag(self):
+		tag = "w" + str(int(self.waypoint_tag[1:])+1)
+		self.outlines.append(tag)
+		return tag
 
-	def get_highlight_tag(self):
-		return "HIGHLIGHT_" + str(self.highlight_tag)
+	#build an outline tag
+	def gen_outline_tag(self):
+		return "o" + str(int(self.outline_tag[1:])+1)
 
 	#main function
 	def mainloop(self):
