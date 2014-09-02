@@ -1,3 +1,4 @@
+from Point import Point
 from Tkinter import *
 import math
 
@@ -32,7 +33,7 @@ for t in range(0, 7000):
 	x = 100*math.sin(t)+200
 	y = 100*math.cos(t)+200
 	build_point(circle, x, y)
-	build_line(circle, x, y, xb, yb)
+	#build_line(circle, x, y, xb, yb)
 
 #parametric cubic bezier curve
 for t in range(0, 1000):
@@ -53,6 +54,7 @@ for t in range(0, 1000):
 	y = (160*(1-t)**3) + (200*3*t*(1-t)**2) + (260*3*(t**2)*(1-t)) + (40*(t**3))
 	build_point(bezier, x, y)
 
+'''
 #cubic bezier curve using de Casteljau's
 for t in range(0, 1000):
 	x, y = 0, 0
@@ -62,10 +64,38 @@ for t in range(0, 1000):
 	Px = (1-t)*coords[0][0] + t*coords[1][0]
 	Py = (1-t)*coords[0][1] + t*coords[1][1]
 	build_point(casteljau, Px, Py)
+'''
 
-#inefficient! recursive interpolation
-def casteljau(p0, p1, p2, t):
-	pFinal = []
+#LERP
+def lerp(a, b, c, t):
+	c.x = a.x + (b.x-a.x)*t #0<=t<=1; certain point on x axis
+	c.y = a.y + (b.y-a.y)*t #0<=t<=1; certain point on y axis
 
+'''
+	*B
+*--------------*
+A              D
+		*C
+'''
+
+#linear interpolation, de Casteljau's
+def casteljau(a, b, c, d, C, t):
+	ab = bc = cd = abbc = bccd = Point()
+	lerp(a, b, ab, t)
+	lerp(b, c, bc, t)
+	lerp(c, d, cd, t)
+	lerp(ab, bc, abbc, t)
+	lerp(bc, cd, bccd, t)
+	lerp(abbc, bccd, C, t)
+
+def main():
+	a, b, c, d = Point(120, 160), Point(35, 200), Point(220, 260), Point(220, 40)
+	for i in range(0, 1000):
+		t = float(i)/999
+		p = Point()
+		casteljau(a, b, c, d, p, t)
+		build_point(casteljau, p.x, p.y)
+		print p.x, p.y
 
 gui.mainloop()
+main()
