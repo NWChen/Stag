@@ -11,8 +11,8 @@ cubic = Canvas(gui, width=width, height=height, bg=bg)
 cubic.grid(row=0, column=1)
 bezier = Canvas(gui, width=width, height=height, bg=bg)
 bezier.grid(row=1, column=0)
-casteljau = Canvas(gui, width=width, height=height, bg=bg)
-casteljau.grid(row=1, column=1)
+castel = Canvas(gui, width=width, height=height, bg=bg)
+castel.grid(row=1, column=1)
 x, y = 0, 0
 xb, yb = 0, 0
 
@@ -80,7 +80,7 @@ A              D
 
 #linear interpolation, de Casteljau's
 def casteljau(a, b, c, d, C, t):
-	ab = bc = cd = abbc = bccd = Point()
+	ab, bc, cd, abbc, bccd = Point(), Point(), Point(), Point(), Point() #multiple assignment to same variable apparently is assignment by reference, so this is necessary
 	lerp(a, b, ab, t)
 	lerp(b, c, bc, t)
 	lerp(c, d, cd, t)
@@ -94,8 +94,8 @@ def main():
 		t = float(i)/999
 		p = Point()
 		casteljau(a, b, c, d, p, t)
-		build_point(casteljau, p.x, p.y)
+		build_point(castel, p.x, p.y)
 		print p.x, p.y
 
+castel.bind('<Button-1>', main())
 gui.mainloop()
-main()
