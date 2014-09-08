@@ -1,9 +1,6 @@
 $(document).ready(function(){
 
-var mid_drawn = 0;
-var drawn = 0;
-var pts = [];
-var mids = [];
+var waypts = [];
 var canvas = $('canvas'), ctx;
 canvas = canvas[0];
 canvas.height = 600;
@@ -34,25 +31,33 @@ function plotLine(p1, p2, color){
 	ctx.stroke();
 }
 
-function findMidpoint(p1, p2){
-	m = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2};
-	console.log(m);
-	return m;
-}
+
 
 //conflicts with click function. move that shit
 function findControlPoints(p1, p2, p3){
+	plotLine(p1, p2, 'gray');
+	plotLine(p2, p3, 'gray');
+	plotPoint(p1, 2, 'black'); //should this be part of the click event?
+	plotPoint(p2, 2, 'black');
+	plotPoint(p3, 2, 'black');
+
+	m1 = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2};
+	m2 = {x:(p2.x+p3.x)/2, y:(p2.y+p3.y)/2};
+	l12 = Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y), 2);
+	l23 = Math.sqrt(Math.pow(p3.x-p2.x, 2)+Math.pow(p3.y-p2.y), 2);
+	m1q/qm2 = l12/l23
 	
+
 }
 
 $('canvas').click(function(e){
 	var offset = $(this).offset();
 	var point = {x:e.pageX-offset.left, y:e.pageY-offset.top};
 	plotPoint(point, 2, 'black');
-	pts.push(point);
-	if(pts.length>1){
-		plotLine(pts[drawn], pts[drawn+1]);
-		var m = findMidpoint(pts[drawn], pts[++drawn]);
+	waypts.push(point);
+	if(waypts.length>1){
+		plotLine(waypts[drawn], waypts[drawn+1]);
+		var m = findMidpoint(waypts[drawn], waypts[++drawn]);
 		plotPoint(m, 2, 'gray')
 		mids.push(m);
 	}
