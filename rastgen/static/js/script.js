@@ -51,10 +51,18 @@ function findControlPoints(p1, p2, p3){
 	m1q = k*distance(m1, m2); //distance from m1 to q
 	m2q = (1-k)*distance(m1, m2); //distance from q to m2
 	dxq2 = (m2q*(m2.x-m1.x))/(m1q+m2q); //distance from q to m2 in the x-axis
-	dyq2 = (m2//distance from q to m2 in the y-axis
-
+	dyq2 = (m2q*(m1.y-m2.y))/(m1q+m2q); //distance from q to m2 in the y-axis
+	dxq1 = (m2.x-m1.x)-dxq2;
+	dyq1 = (m2.y-m1.y)-dyq2;
+	//q = {x:(m2.x-dxq2), y:(m2.y-dyq2)};
+	c1 = {x:p2.x-dxq1, y:p2.y-dyq1};
+	c2 = {x:p2.x+dxq2, y:p2.y+dxq2};
+	return {c1:c1, c2:c2, l1:l1, l2:l2};
 }
 
+$('canvas')
+
+/*
 $('canvas').click(function(e){
 	var offset = $(this).offset();
 	var point = {x:e.pageX-offset.left, y:e.pageY-offset.top};
@@ -68,5 +76,6 @@ $('canvas').click(function(e){
 	}
 	if(mids.length>1) plotLine(mids[mid_drawn], mids[++mid_drawn], 'blue');
 });
+*/
 
 });
