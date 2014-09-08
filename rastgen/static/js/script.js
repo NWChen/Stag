@@ -50,11 +50,6 @@ $('canvas').click(function(e){
 			plotPoint(findMidpoint(pts[i], pts[i+1]), 2, 'red');
 		}
 	}
-	if(mids.length > 1){
-		for(i=0; i<mids.length-1; i++){
-			plotLine(mids[i], mids[i+1], 'blue');
-		}
-	}
 });
 
 });
