@@ -33,7 +33,7 @@ function plotLine(p1, p2, color){
 }
 
 function distance(p1, p2){
-	return Math.sqrt(Math.pow(p2.x-p1.x, 2.0)+Math.pow(p2.y-p1.y), 2.0)
+	return Math.sqrt(Math.pow(p2.x-p1.x, 2.0)+Math.pow(p2.y-p1.y, 2.0));
 }
 
 //conflicts with click function. move that shit
@@ -43,19 +43,22 @@ function findControlPoints(p1, p2, p3){
 
 	m1 = {x:(p1.x+p2.x)/2.0, y:(p1.y+p2.y)/2.0}; //midpoint of p1, p2
 	m2 = {x:(p2.x+p3.x)/2.0, y:(p2.y+p3.y)/2.0}; //midpoint of p2, p3
+	
+	//toss all this...
 	l12 = distance(p1, p2); //distance between p1 and p2
 	l23 = distance(p2, p3); //distance between p2 and p3
 	k = l12/l23 //ratio of p1, p2 to p2, p3
 	m1q = k*distance(m1, m2); //distance from m1 to q
-	m2q = (1-k)*distance(m1, m2); //distance from q to m2
+	m2q = (1.0-k)*distance(m1, m2); //distance from q to m2
 	dxq2 = (m2q*(m2.x-m1.x))/(m1q+m2q); //distance from q to m2 in the x-axis
 	dyq2 = (m2q*(m1.y-m2.y))/(m1q+m2q); //distance from q to m2 in the y-axis
 	dxq1 = (m2.x-m1.x)-dxq2;
 	dyq1 = (m2.y-m1.y)-dyq2;
 	//q = {x:(m2.x-dxq2), y:(m2.y-dyq2)};
+
 	c1 = {x:p2.x-dxq1, y:p2.y-dyq1};
 	c2 = {x:p2.x+dxq2, y:p2.y+dxq2};
-	console.log(dxq2);
+	console.log(l12);
 	return {c1:c1, c2:c2, l1:l12, l2:l23};
 }
 
