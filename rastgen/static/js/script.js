@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 var pts = [];
+var mids = [];
 var canvas = $('canvas'), ctx;
 canvas = canvas[0];
 canvas.height = 600;
@@ -32,7 +33,10 @@ function plotLine(p1, p2, color){
 }
 
 function findMidpoint(p1, p2){
-
+	m = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2};
+	mids.push(m);
+	console.log(m);
+	return m;
 }
 
 $('canvas').click(function(e){
@@ -43,6 +47,12 @@ $('canvas').click(function(e){
 	if(pts.length > 1){
 		for(i=0; i<pts.length-1; i++){
 			plotLine(pts[i], pts[i+1], 'gray');
+			plotPoint(findMidpoint(pts[i], pts[i+1]), 2, 'red');
+		}
+	}
+	if(mids.length > 1){
+		for(i=0; i<mids.length-1; i++){
+			plotLine(mids[i], mids[i+1], 'blue');
 		}
 	}
 });
