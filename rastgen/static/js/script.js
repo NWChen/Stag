@@ -1,5 +1,6 @@
 $(document).ready(function(){
 
+var scan = 0;
 var waypts = [];
 var canvas = $('canvas'), ctx;
 canvas = canvas[0];
@@ -32,19 +33,16 @@ function plotLine(p1, p2, color){
 }
 
 function distance(p1, p2){
-	return Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y), 2)
+	return Math.sqrt(Math.pow(p2.x-p1.x, 2.0)+Math.pow(p2.y-p1.y), 2.0)
 }
 
 //conflicts with click function. move that shit
 function findControlPoints(p1, p2, p3){
 	plotLine(p1, p2, 'gray');
 	plotLine(p2, p3, 'gray');
-	plotPoint(p1, 2, 'black'); //should this be part of the click event?
-	plotPoint(p2, 2, 'black');
-	plotPoint(p3, 2, 'black');
 
-	m1 = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2}; //midpoint of p1, p2
-	m2 = {x:(p2.x+p3.x)/2, y:(p2.y+p3.y)/2}; //midpoint of p2, p3
+	m1 = {x:(p1.x+p2.x)/2.0, y:(p1.y+p2.y)/2.0}; //midpoint of p1, p2
+	m2 = {x:(p2.x+p3.x)/2.0, y:(p2.y+p3.y)/2.0}; //midpoint of p2, p3
 	l12 = distance(p1, p2); //distance between p1 and p2
 	l23 = distance(p2, p3); //distance between p2 and p3
 	k = l12/l23 //ratio of p1, p2 to p2, p3
@@ -57,10 +55,23 @@ function findControlPoints(p1, p2, p3){
 	//q = {x:(m2.x-dxq2), y:(m2.y-dyq2)};
 	c1 = {x:p2.x-dxq1, y:p2.y-dyq1};
 	c2 = {x:p2.x+dxq2, y:p2.y+dxq2};
-	return {c1:c1, c2:c2, l1:l1, l2:l2};
+	console.log(dxq2);
+	return {c1:c1, c2:c2, l1:l12, l2:l23};
 }
 
-$('canvas')
+$('canvas').click(function(e){
+	var offset = $(this).offset();
+	point = {x:e.pageX-offset.left, y:e.pageY-offset.top};
+	waypts.push(point);
+	plotPoint(point, 2, 'black');
+	if(waypts.length>2){
+		var S = findControlPoints(waypts[scan], waypts[scan+1], waypts[scan+2]);
+		scan++;
+		console.log(S);
+		plotPoint(S.c1, 2, 'blue');
+		plotPoint(S.c2, 2, 'blue');
+	}
+});
 
 /*
 $('canvas').click(function(e){
