@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+var mid_drawn = 0;
+var drawn = 0;
 var pts = [];
 var mids = [];
 var canvas = $('canvas'), ctx;
@@ -34,9 +36,13 @@ function plotLine(p1, p2, color){
 
 function findMidpoint(p1, p2){
 	m = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2};
-	mids.push(m);
 	console.log(m);
 	return m;
+}
+
+//conflicts with click function. move that shit
+function findControlPoints(p1, p2, p3){
+	
 }
 
 $('canvas').click(function(e){
@@ -44,12 +50,13 @@ $('canvas').click(function(e){
 	var point = {x:e.pageX-offset.left, y:e.pageY-offset.top};
 	plotPoint(point, 2, 'black');
 	pts.push(point);
-	if(pts.length > 1){
-		for(i=0; i<pts.length-1; i++){
-			plotLine(pts[i], pts[i+1], 'gray');
-			plotPoint(findMidpoint(pts[i], pts[i+1]), 2, 'red');
-		}
+	if(pts.length>1){
+		plotLine(pts[drawn], pts[drawn+1]);
+		var m = findMidpoint(pts[drawn], pts[++drawn]);
+		plotPoint(m, 2, 'gray')
+		mids.push(m);
 	}
+	if(mids.length>1) plotLine(mids[mid_drawn], mids[++mid_drawn], 'blue');
 });
 
 });
