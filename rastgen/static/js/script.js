@@ -31,7 +31,9 @@ function plotLine(p1, p2, color){
 	ctx.stroke();
 }
 
-
+function distance(p1, p2){
+	return Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y), 2)
+}
 
 //conflicts with click function. move that shit
 function findControlPoints(p1, p2, p3){
@@ -41,12 +43,15 @@ function findControlPoints(p1, p2, p3){
 	plotPoint(p2, 2, 'black');
 	plotPoint(p3, 2, 'black');
 
-	m1 = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2};
-	m2 = {x:(p2.x+p3.x)/2, y:(p2.y+p3.y)/2};
-	l12 = Math.sqrt(Math.pow(p2.x-p1.x, 2)+Math.pow(p2.y-p1.y), 2);
-	l23 = Math.sqrt(Math.pow(p3.x-p2.x, 2)+Math.pow(p3.y-p2.y), 2);
-	m1q/qm2 = l12/l23
-	
+	m1 = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2}; //midpoint of p1, p2
+	m2 = {x:(p2.x+p3.x)/2, y:(p2.y+p3.y)/2}; //midpoint of p2, p3
+	l12 = distance(p1, p2); //distance between p1 and p2
+	l23 = distance(p2, p3); //distance between p2 and p3
+	k = l12/l23 //ratio of p1, p2 to p2, p3
+	m1q = k*distance(m1, m2); //distance from m1 to q
+	m2q = (1-k)*distance(m1, m2); //distance from q to m2
+	dxq2 = (m2q*(m2.x-m1.x))/(m1q+m2q); //distance from q to m2 in the x-axis
+	dyq2 = (m2//distance from q to m2 in the y-axis
 
 }
 
