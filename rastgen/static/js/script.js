@@ -56,8 +56,22 @@ function findControlPoints(p1, p2, p3){
 	dyq1 = (m2.y-m1.y)-dyq2;
 	//q = {x:(m2.x-dxq2), y:(m2.y-dyq2)};
 
-	c1 = {x:p2.x-dxq1, y:p2.y-dyq1};
-	c2 = {x:p2.x+dxq2, y:p2.y+dxq2};
+	var dx1 = p1.x-p2.x, dy1 = p1.y-p2.y, 
+		dx2 = p2.x-p3.x, dy2 = p2.y-p3.y;
+
+	var l1 = Math.sqrt(dx1*dx1 + dy1*dy1),
+		l2 = Math.sqrt(dx2*dx2 + dy2*dy2);
+
+	var m1 = {x:(p1.x+p2.x)/2, y:(p1.y+p2.y)/2},
+		m2 = {x:(p2.x+p3.x)/2, y:(p2.y+p3.y)/2};
+
+	var dxm = (m1.x-m2.x),
+		dym = (m1.y-m2.y);
+ 
+	var q = 
+
+	c1 = {x:p1.x+tx, y:p1.y+ty};
+	c2 = {x:p2.x+tx, y:p2.y+ty};
 	console.log(l12);
 	return {c1:c1, c2:c2, l1:l12, l2:l23};
 }
