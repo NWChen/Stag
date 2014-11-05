@@ -11,7 +11,7 @@ ctx = canvas.getContext('2d');
 function plotPoint(point, radius, color){
 	ctx.strokeStyle = color;
 	ctx.fillStyle = color;
-	ctx.beginPath();
+	ctx.beginPath();s
 	ctx.moveTo(point.x, point.y);
 	ctx.arc(point.x, point.y, radius, 2*Math.PI, false);
 	ctx.closePath();
@@ -68,7 +68,8 @@ function findControlPoints(p1, p2, p3){
 	var dxm = (m1.x-m2.x),
 		dym = (m1.y-m2.y);
  
-	var q = 
+ 	var q = l1/(l1+l2), 
+
 
 	c1 = {x:p1.x+tx, y:p1.y+ty};
 	c2 = {x:p2.x+tx, y:p2.y+ty};
@@ -89,6 +90,7 @@ $('canvas').click(function(e){
 		plotPoint(S.c2, 2, 'blue');
 	}
 });
+
 
 /*
 $('canvas').click(function(e){
