@@ -1,5 +1,5 @@
 from Point import Point
-from Tkinter import *
+from tkinter import *
 import math
 
 gui = Tk()
@@ -95,7 +95,7 @@ def main():
 		p = Point()
 		casteljau(a, b, c, d, p, t)
 		build_point(castel, p.x, p.y)
-		print p.x, p.y
+		#print p.x, p.y
 
 castel.bind('<Button-1>', main())
 gui.mainloop()
