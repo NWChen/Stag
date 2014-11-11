@@ -7,6 +7,15 @@ from tkinter import *
 def build_point(p, color='black', size=1):
 	canvas.create_oval(p.x-size, height-(p.y-size), p.x+size, height-(p.y+size), fill=color, outline=color)
 
+def convert_to_derivative(p1, p2, angle):
+	x = p2.x-p1.x
+	if angle==90:
+		angle = 0
+	else:
+		angle = (angle*math.pi)/180
+	y = x*math.tan(angle)
+	return Derivative(y, x)
+
 def cubic_interpolate(p1, p2, t1, t2, steps):
 	for t in range(0, steps):
 		s = t/float(steps)
@@ -30,16 +39,18 @@ def quintic_interpolate(p1, p2, d1, d2, dd1, dd2, steps):
 		h5 = (10*math.pow(s,3))-(15*math.pow(s,4))+(6*math.pow(s,5))
 		p = Point(h0*p1.x + h1*d1)
 
-def build_tangent(p, slope, color='black'):
-	x = p.x
-	y = (slope/500)*x + (height-p.y)
-	x, y = x+100, y-100
-	canvas.create_line(p.x, p.y, x, y)
+def build_tangent(p, derivative, color='black'):
+	x = p.x + derivative.dx
+	y = height-(p.y + derivative.dy)
+	canvas.create_line(p.x, p.y, x, y, fill=color)
 
 gui = Tk()
 width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
+
+#a, b = Point(300, 400), Point(600, 400)
+#cubic_interpolate(a, b, convert_to_derivative(a, b, 89), Derivative(0, 1000), 100)
 
 x, up = 0, True
 while(True):
@@ -51,9 +62,11 @@ while(True):
 		up = False
 	elif x<(-200):
 		up = True
-	cubic_interpolate(Point(300, 400), Point(600, 400), Derivative(-1000, x), Derivative(0, 1000), 100)
-	build_tangent(Point(300, 400), x)
-	canvas.after(15)
+	dx, dy = x, x
+	a, b = Point(300, 400), Point(600, 400)
+	cubic_interpolate(a, b, convert_to_derivative(a, b, 100), Derivative(0, 1000), 100)
+	#build_tangent(a, convert_to_derivative(a, b, 90), 'red')
+	canvas.after(60)
 	canvas.update()
 	canvas.delete("all")
 
