@@ -47,12 +47,16 @@ canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
 a, b, c = Point(300, 400), Point(600, 400), Point(200, 500)
-ta, tb, tc = [45, 200], [0, 1000], [60, 500]
-build_point(a, 'red', 2)
-build_point(b, 'red', 2)
-build_point(c, 'red', 2)
-cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(ta[1], tb[0]), 100)
-cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tb[1], tc[0]), 100)
+ta, tb, tc = [30, 200], [40, 1000], [90, 500]
+build_point(a, 'red', 3)
+build_point(b, 'red', 3)
+build_point(c, 'red', 3)
+
+cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 500)
+cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 500)
+build_tangent(a, convert_to_derivative(ta[0], ta[1]), 'red')
+build_tangent(b, convert_to_derivative(tb[0], tb[1]), 'red')
+build_tangent(c, convert_to_derivative(tc[0], tc[1]), 'red')
 
 '''
 x, up = 0, True
