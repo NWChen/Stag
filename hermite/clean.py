@@ -7,13 +7,10 @@ from tkinter import *
 def build_point(p, color='black', size=1):
 	canvas.create_oval(p.x-size, height-(p.y-size), p.x+size, height-(p.y+size), fill=color, outline=color)
 
-def convert_to_derivative(p1, p2, angle):
-	x = p2.x-p1.x
-	if angle==90:
-		angle = 0
-	else:
-		angle = (angle*math.pi)/180
-	y = x*math.tan(angle)
+def convert_to_derivative(angle, magnitude):
+	angle = (angle*math.pi)/180
+	y = magnitude*math.sin(angle)
+	x = magnitude*math.cos(angle)
 	return Derivative(y, x)
 
 def cubic_interpolate(p1, p2, t1, t2, steps):
@@ -49,9 +46,15 @@ width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
-#a, b = Point(300, 400), Point(600, 400)
-#cubic_interpolate(a, b, convert_to_derivative(a, b, 89), Derivative(0, 1000), 100)
+a, b, c = Point(300, 400), Point(600, 400), Point(200, 500)
+ta, tb, tc = [45, 200], [0, 1000], [60, 500]
+build_point(a, 'red', 2)
+build_point(b, 'red', 2)
+build_point(c, 'red', 2)
+cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(ta[1], tb[0]), 100)
+cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tb[1], tc[0]), 100)
 
+'''
 x, up = 0, True
 while(True):
 	if up==True:
@@ -69,5 +72,6 @@ while(True):
 	canvas.after(60)
 	canvas.update()
 	canvas.delete("all")
+'''
 
 gui.mainloop()
