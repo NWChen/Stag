@@ -4,8 +4,6 @@ from Derivative import Derivative
 from Point import Point
 from tkinter import *
 
-main_sequence = []
-
 #draw a point
 def build_point(p, color='black', size=1):
 	canvas.create_oval(p.x-size, height-(p.y-size), p.x+size, height-(p.y+size), fill=color, outline=color)
@@ -74,21 +72,16 @@ def draw_sequence(sequence, color="black"):
 	return
 
 #offset a curve to be parallel to the base curve
-def offset_cubic(p1, sequence, offset):
+def offset_cubic(sequence, offset):
 	output_sequence, s = [], 0
 	for step in range(0, len(sequence)):
 		s = step/float(len(sequence))
 		p = sequence[step]
-		f = p1.x*(2*s*s*s - 3*s*s + s + 1)
-		fp = p1.x*(6*s*s - 6*s + 1)
-		g = p1.y*(2*s*s*s - 3*s*s + s + 1)
-		gp = p1.y*(6*s*s - 6*s + 1)
-		x = f+((offset*gp)/math.sqrt(fp*fp + gp*gp))
-		#xdown = f-((offset*gp)/math.sqrt(fp*fp + gp*gp))
-		y = g+((offset*fp)/math.sqrt(fp*fp + gp*gp))
-		#ydown = g-((offset*fp)/math.sqrt(fp*fp + gp*gp))
-		output_sequence.append(Point(x, y))
-		print(x, y)
+		dxdt = p.x*(6*s*s - 6*s + 1)
+		print(dxdt)
+		dydt = p.y*(6*s*s - 6*s + 1)
+		#print(dydt/dxdt)
+		build_tangent(p, Derivative(0, dxdt), 'gray')
 	return output_sequence
 
 gui = Tk()
@@ -96,39 +89,17 @@ width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
-a, b, c = Point(300, 200), Point(600, 300), Point(200, 500)
-ta, tb, tc = [60, 800], [40, 1000], [90, 500]
+a, b, c = Point(300, 200), Point(300, 500), Point(200, 500)
+ta, tb, tc = [90, 100], [90, 100], [135, 500]
 build_point(a, 'red', 3)
 build_point(b, 'red', 3)
 build_point(c, 'red', 3)
-#build_tangent(a, convert_to_derivative(ta[0], ta[1]), 'red')
+build_tangent(a, convert_to_derivative(ta[0], ta[1]), 'red')
 build_tangent(b, convert_to_derivative(tb[0], tb[1]), 'green')
 build_tangent(c, convert_to_derivative(tc[0], tc[1]), 'blue')
-s=0
 
-main_sequence.extend(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 1000))
-main_sequence.extend(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 1000))
-
-draw_sequence(main_sequence)
-
-'''
-x, up = 0, True
-while(True):
-	if up==True:
-		x += 10
-	else:
-		x -= 10
-	if x>200:
-		up = False
-	elif x<(-200):
-		up = True
-	dx, dy = x, x
-	a, b = Point(300, 400), Point(600, 400)
-	cubic_interpolate(a, b, convert_to_derivative(a, b, 100), Derivative(0, 1000), 100)
-	#build_tangent(a, convert_to_derivative(a, b, 90), 'red')
-	canvas.after(60)
-	canvas.update()
-	canvas.delete("all")
-'''
+draw_sequence(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100))
+draw_sequence(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100))
+offset_cubic(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100), 2)
 
 gui.mainloop()
