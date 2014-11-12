@@ -50,21 +50,6 @@ def quintic_interpolate(p1, p2, d1, d2, dd1, dd2, steps):
 		#Finish this up
 	return
 
-#find the slope of the line tangent to a cubic spline at a given point
-def derive(p, s):
-	x = p.x*(6*s*s - 6*s + 1)
-	y = p.y*(6*s*s - 6*s + 1)
-	return Derivative(x, y)
-
-'''
-#derive using 2 consecutive points
-def rough_derive(sequence, step):
-	if(len(sequence)<2):
-		return 0
-	else:
-		return Derivative(sequence[step+1].y-sequence[step].y, sequence[step+1].x-sequence[step].x)
-'''
-
 #draw a sequence of points
 def draw_sequence(sequence, color="black"):
 	for p in sequence:
@@ -74,15 +59,18 @@ def draw_sequence(sequence, color="black"):
 #offset a curve to be parallel to the base curve
 def offset_cubic(sequence, offset):
 	output_sequence, s = [], 0
-	for step in range(0, len(sequence)):
+	for step in range(0, len(sequence)-1):
 		s = step/float(len(sequence))
 		p = sequence[step]
-		dxdt = p.x*(6*s*s - 6*s + 1)
-		print(dxdt)
-		dydt = p.y*(6*s*s - 6*s + 1)
-		#print(dydt/dxdt)
-		build_tangent(p, Derivative(0, dxdt), 'gray')
+		build_tangent(p, derive(sequence, step), 'blue')
 	return output_sequence
+
+def derive(sequence, step):
+	if(len(sequence)<2): 
+		return 0
+	dx, dy = sequence[step+1].x-sequence[step].x, sequence[step+1].y-sequence[step].y
+	print(dy, dx)
+	return Derivative(dy*100, dx*100)
 
 gui = Tk()
 width, height, bg = 800, 800, "white"
@@ -90,7 +78,7 @@ canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
 a, b, c = Point(300, 200), Point(300, 500), Point(200, 500)
-ta, tb, tc = [90, 100], [90, 100], [135, 500]
+ta, tb, tc = [200, 400], [400, 600], [135, 500]
 build_point(a, 'red', 3)
 build_point(b, 'red', 3)
 build_point(c, 'red', 3)
@@ -100,6 +88,7 @@ build_tangent(c, convert_to_derivative(tc[0], tc[1]), 'blue')
 
 draw_sequence(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100))
 draw_sequence(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100))
-offset_cubic(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100), 2)
+offset_cubic(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100), 10)
+offset_cubic(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100), 10)
 
 gui.mainloop()
