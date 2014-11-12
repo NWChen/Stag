@@ -68,11 +68,11 @@ def offset_cubic(sequence, offset):
 		p = sequence[step]
 		m = n_derive(sequence, step)
 		line = tangent_interpolate(p, m)
-		x, y = line[1].x-line[0].x, line[1].y-line[0].y
+		x, y = float(line[1].x-line[0].x), float(line[1].y-line[0].y)
 		length = math.sqrt(x*x + y*y)
 		h, w = (offset*y)/length, (offset*x)/length
 		output_sequence.append(Point(p.x+w, p.y+h))
-		build_tangent(p, m, 'red')
+		#build_tangent(p, m, 'red')
 	return output_sequence
 
 #differentiate at a step using predetermined points
@@ -96,13 +96,10 @@ canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
 a, b, c = Point(300, 200), Point(300, 500), Point(200, 700)
-ta, tb, tc = [200, 400], [400, 600], [135, 500]
+ta, tb, tc = [60, 400], [90, 600], [135, 500]
 build_point(a, 'red', 3)
 build_point(b, 'red', 3)
 build_point(c, 'red', 3)
-build_tangent(a, convert_to_derivative(ta[0], ta[1]), 'red')
-build_tangent(b, convert_to_derivative(tb[0], tb[1]), 'green')
-build_tangent(c, convert_to_derivative(tc[0], tc[1]), 'blue')
 
 draw_sequence(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100))
 draw_sequence(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100))
