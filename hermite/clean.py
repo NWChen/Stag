@@ -10,9 +10,10 @@ def build_point(p, color='black', size=1):
 
 #draw the tangent line at a given point
 def build_tangent(p, derivative, color='black'):
-	x = p.x + derivative.dx
-	y = height-(p.y + derivative.dy)
-	canvas.create_line(p.x, height-p.y, x, y, fill=color)
+	x1, x2 = p.x + derivative.dx, p.x - derivative.dx
+	y1, y2 = height-(p.y + derivative.dy), height-(p.y - derivative.dy)
+	canvas.create_line(p.x, height-p.y, x1, y1, fill=color)
+	canvas.create_line(p.x, height-p.y, x2, y2, fill=color)
 	return
 
 #converts a vector to a derivative
@@ -62,15 +63,23 @@ def offset_cubic(sequence, offset):
 	for step in range(0, len(sequence)-1):
 		s = step/float(len(sequence))
 		p = sequence[step]
-		build_tangent(p, derive(sequence, step), 'blue')
+		build_tangent(p, n_derive(sequence, step), 'blue')
 	return output_sequence
 
+#differentiate at a step using predetermined points
 def derive(sequence, step):
 	if(len(sequence)<2): 
 		return 0
 	dx, dy = sequence[step+1].x-sequence[step].x, sequence[step+1].y-sequence[step].y
 	print(dy, dx)
-	return Derivative(dy*100, dx*100)
+	return Derivative(dy*10, dx*10)
+
+#find the normal to the derivative
+def n_derive(sequence, step):
+	if(len(sequence)<2):
+		return 0
+	dydx = derive(sequence, step)
+	return Derivative(-dydx.dx*10, dydx.dy*10)
 
 gui = Tk()
 width, height, bg = 800, 800, "white"
