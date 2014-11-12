@@ -8,12 +8,15 @@ from tkinter import *
 def build_point(p, color='black', size=1):
 	canvas.create_oval(p.x-size, height-(p.y-size), p.x+size, height-(p.y+size), fill=color, outline=color)
 
-#draw the tangent line at a given point
-def build_tangent(p, derivative, color='black'):
+def tangent_interpolate(p, derivative):
 	x1, x2 = p.x + derivative.dx, p.x - derivative.dx
 	y1, y2 = height-(p.y + derivative.dy), height-(p.y - derivative.dy)
-	canvas.create_line(p.x, height-p.y, x1, y1, fill=color)
-	canvas.create_line(p.x, height-p.y, x2, y2, fill=color)
+	return [Point(x1, y1), Point(x2, y2)]
+
+#draw the tangent line at a given point
+def build_tangent(p, derivative, color='black'):
+	line = tangent_interpolate(p, derivative)
+	canvas.create_line(line[0].x, line[0].y, line[1].x, line[1].y, fill=color)
 	return
 
 #converts a vector to a derivative
@@ -63,7 +66,13 @@ def offset_cubic(sequence, offset):
 	for step in range(0, len(sequence)-1):
 		s = step/float(len(sequence))
 		p = sequence[step]
-		build_tangent(p, n_derive(sequence, step), 'blue')
+		m = n_derive(sequence, step)
+		line = tangent_interpolate(p, m)
+		x, y = line[1].x-line[0].x, line[1].y-line[0].y
+		length = math.sqrt(x*x + y*y)
+		h, w = (offset*y)/length, (offset*x)/length
+		output_sequence.append(Point(p.x+w, p.y+h))
+		build_tangent(p, m, 'red')
 	return output_sequence
 
 #differentiate at a step using predetermined points
@@ -72,7 +81,7 @@ def derive(sequence, step):
 		return 0
 	dx, dy = sequence[step+1].x-sequence[step].x, sequence[step+1].y-sequence[step].y
 	print(dy, dx)
-	return Derivative(dy*10, dx*10)
+	return Derivative(dy, dx)
 
 #find the normal to the derivative
 def n_derive(sequence, step):
@@ -86,7 +95,7 @@ width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
 
-a, b, c = Point(300, 200), Point(300, 500), Point(200, 500)
+a, b, c = Point(300, 200), Point(300, 500), Point(200, 700)
 ta, tb, tc = [200, 400], [400, 600], [135, 500]
 build_point(a, 'red', 3)
 build_point(b, 'red', 3)
@@ -97,7 +106,7 @@ build_tangent(c, convert_to_derivative(tc[0], tc[1]), 'blue')
 
 draw_sequence(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100))
 draw_sequence(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100))
-offset_cubic(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100), 10)
-offset_cubic(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100), 10)
+draw_sequence(offset_cubic(cubic_interpolate(a, b, convert_to_derivative(ta[0], ta[1]), convert_to_derivative(tb[0], tb[1]), 100), 10), 'blue')
+draw_sequence(offset_cubic(cubic_interpolate(b, c, convert_to_derivative(tb[0], tb[1]), convert_to_derivative(tc[0], tc[0]), 100), 10), 'green')
 
 gui.mainloop()
