@@ -27,7 +27,7 @@ def release(event):
 		a, b = points[current_point].start, points[current_point+1].start
 		at, bt = points[current_point], points[current_point+1]
 		draw(interpolate(a, b, at, bt, 50))
-		draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
+		draw(shitty_offset(interpolate(a, b, at, bt,250), 10), "red")
 		#draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
 		print(current_point)
 
@@ -57,15 +57,19 @@ def offset(sequence, k):
 	k_sequence = []
 	for t in range(0, len(sequence)-1):
 		s = t/float(len(sequence))
-		dx, dy = sequence[t+1].x-sequence[t].x, sequence[t+1].y-sequence[t].y
-		left, right = Point(-dy, dx), Point(dy, -dx)
-		'''
 		f, g = sequence[t].x, sequence[t].y
 		fp, gp = sequence[t+1].x, sequence[t+1].y
 		x, y = f + (k*gp)/math.sqrt(fp*fp + gp*gp), g - (k*fp)/math.sqrt(fp*fp + gp*gp)
-		'''
-		k_sequence.append(left)
-		k_sequence.append(right)
+		k_sequence.append(Point(x, y))
+	return k_sequence
+
+def shitty_offset(sequence, k):
+	k_sequence = []
+	for t in range(0, len(sequence)-1):
+		a, b = sequence[t].x, sequence[t].y
+		x = (sequence[t].x+sequence[t+1].x)/2
+		y = math.sqrt(k*k - (x-a)*(x-a)) + b
+		k_sequence.append(Point(x, y))
 	return k_sequence
 
 def draw(sequence, color="black"):
