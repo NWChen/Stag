@@ -3,12 +3,26 @@ from Point import Point
 from tkinter import *
 from Vector import Vector
 
+points = []
+
 #draw a point
+def click(event):
+	build_point(Point(event.x, event.y), "red", 2, "rectangle")
+
+def drag(event):
+	return
+
+def release(event):
+	return
+
 def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="rectangle":
 		canvas.create_rectangle(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
 	if shape=="circle":
 		canvas.create_oval(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
+
+def build_line(p, _p):
+	canvas.create_line(p.x, p.y, _p.x, _p.y, fill="blue")
 
 def interpolate(p1, p2, t1, t2, steps):
 	sequence = []
@@ -29,7 +43,7 @@ def offset(sequence, k):
 		s = t/float(len(sequence))
 		f, g = sequence[t].x, sequence[t].y
 		fp, gp = sequence[t+1].x, sequence[t+1].y
-		x, y = f + (k*gp)/math.sqrt(fp*fp + gp*gp), g + (k*fp)/math.sqrt(fp*fp + gp*gp)
+		x, y = f + (k*gp)/math.sqrt(fp*fp + gp*gp), g - (k*fp)/math.sqrt(fp*fp + gp*gp)
 		k_sequence.append(Point(x, y))
 	return k_sequence
 
@@ -38,6 +52,9 @@ def draw(sequence, color="black"):
 		build_point(point, color)
 
 gui = Tk()
+gui.bind('<Button-1>', click)
+gui.bind('<B1-Motion>', drag)
+gui.bind('<ButtonRelease-1>', release)
 width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
@@ -45,13 +62,16 @@ canvas.grid(row=0, column=0)
 a, b, c = Point(300, 200), Point(300, 500), Point(200, 700)
 _a, _b, _c = Point(600, 400), Point(700, 400), Point(300, 800)
 at, bt, ct = Vector(a, _a), Vector(b, _b), Vector(c, _c)
+resolution = 50
 
-draw(interpolate(a, b, at, bt, 100))
-draw(interpolate(b, c, bt, ct, 100))
-draw(offset(interpolate(a, b, at, bt, 100), 50), "red")
-draw(offset(interpolate(a, b, at, bt, 100), -50), "red")
-draw(offset(interpolate(b, c, bt, ct, 100), 50), "red")
-draw(offset(interpolate(b, c, bt, ct, 100), -50), "red")
+draw(interpolate(a, b, at, bt, resolution))
+draw(interpolate(b, c, bt, ct, resolution))
+
+k_offset = 20
+draw(offset(interpolate(a, b, at, bt, resolution), k_offset), "red")
+draw(offset(interpolate(a, b, at, bt, resolution), -k_offset), "red")
+draw(offset(interpolate(b, c, bt, ct, resolution), k_offset), "red")
+draw(offset(interpolate(b, c, bt, ct, resolution), -k_offset), "red")
 build_point(a, "red", 3, "rectangle")
 build_point(b, "red", 3, "rectangle")
 build_point(c, "red", 3, "rectangle")
