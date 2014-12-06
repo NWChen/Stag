@@ -3,7 +3,7 @@ from Point import Point
 from tkinter import *
 from Vector import Vector
 
-points = []
+points, current_point = [], -1
 clicked, x, y = False, -1, -1
 
 def click(event):
@@ -14,9 +14,22 @@ def drag(event):
 	global clicked, x, y, canvas, line_to_cursor
 	#build_line(Point(x, y), Point(event.x, event.y))
 	canvas.coords(line_to_cursor, x, y, event.x, event.y)
+	canvas.coords(line_to_cursor_origin, x-2, y-2, x+2, y+2)
+
 
 def release(event):
-	return
+	global x, y, points, current_point
+	points.append(Vector(Point(x, y), Point(event.x, event.y)))
+	if len(points)<=1:
+		return
+	else:
+		current_point += 1
+		a, b = points[current_point].start, points[current_point+1].start
+		at, bt = points[current_point], points[current_point+1]
+		draw(interpolate(a, b, at, bt, 50))
+		draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
+		#draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
+		print(current_point)
 
 def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="rectangle":
@@ -44,10 +57,15 @@ def offset(sequence, k):
 	k_sequence = []
 	for t in range(0, len(sequence)-1):
 		s = t/float(len(sequence))
+		dx, dy = sequence[t+1].x-sequence[t].x, sequence[t+1].y-sequence[t].y
+		left, right = Point(-dy, dx), Point(dy, -dx)
+		'''
 		f, g = sequence[t].x, sequence[t].y
 		fp, gp = sequence[t+1].x, sequence[t+1].y
 		x, y = f + (k*gp)/math.sqrt(fp*fp + gp*gp), g - (k*fp)/math.sqrt(fp*fp + gp*gp)
-		k_sequence.append(Point(x, y))
+		'''
+		k_sequence.append(left)
+		k_sequence.append(right)
 	return k_sequence
 
 def draw(sequence, color="black"):
@@ -58,11 +76,13 @@ gui = Tk()
 width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
+line_to_cursor_origin = canvas.create_rectangle(-1, -1, -1, -1, fill="red", outline="red")
 line_to_cursor = canvas.create_line(-1, -1, -1, -1)
 gui.bind('<Button-1>', click)
 gui.bind('<B1-Motion>', drag)
 gui.bind('<ButtonRelease-1>', release)
 
+'''
 a, b, c = Point(300, 200), Point(600, 400), Point(200, 700)
 _a, _b, _c = Point(800, 800), Point(800, 800), Point(800, 800)
 at, bt, ct = Vector(a, _a), Vector(b, _b), Vector(c, _c)
@@ -82,5 +102,6 @@ build_point(c, "red", 3, "rectangle")
 canvas.create_line(a.x, a.y, _a.x, _a.y, fill="blue")
 canvas.create_line(b.x, b.y, _b.x, _b.y, fill="blue")
 canvas.create_line(c.x, c.y, _c.x, _c.y, fill="blue")
+'''
 
 gui.mainloop()
