@@ -4,13 +4,15 @@ from tkinter import *
 from Vector import Vector
 
 points = []
+clicked, x, y = False, -1, -1
 
-#draw a point
 def click(event):
-	build_point(Point(event.x, event.y), "red", 2, "rectangle")
+	global clicked, x, y
+	clicked, x, y = True, event.x, event.y
 
 def drag(event):
-	return
+	global clicked, x, y
+
 
 def release(event):
 	return
@@ -21,8 +23,8 @@ def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="circle":
 		canvas.create_oval(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
 
-def build_line(p, _p):
-	canvas.create_line(p.x, p.y, _p.x, _p.y, fill="blue")
+def build_line(p, _p, color):
+	canvas.create_line(p.x, p.y, _p.x, _p.y, fill=color)
 
 def interpolate(p1, p2, t1, t2, steps):
 	sequence = []
@@ -54,6 +56,7 @@ def draw(sequence, color="black"):
 gui = Tk()
 gui.bind('<Button-1>', click)
 gui.bind('<B1-Motion>', drag)
+line = build_line(Point(x, y), Point(event.x, event.y), "blue")
 gui.bind('<ButtonRelease-1>', release)
 width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
