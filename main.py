@@ -11,8 +11,9 @@ def click(event):
 	clicked, x, y = True, event.x, event.y
 
 def drag(event):
-	global clicked, x, y
-
+	global clicked, x, y, canvas, line_to_cursor
+	#build_line(Point(x, y), Point(event.x, event.y))
+	canvas.coords(line_to_cursor, x, y, event.x, event.y)
 
 def release(event):
 	return
@@ -23,7 +24,7 @@ def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="circle":
 		canvas.create_oval(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
 
-def build_line(p, _p, color):
+def build_line(p, _p, color="blue"):
 	canvas.create_line(p.x, p.y, _p.x, _p.y, fill=color)
 
 def interpolate(p1, p2, t1, t2, steps):
@@ -54,16 +55,16 @@ def draw(sequence, color="black"):
 		build_point(point, color)
 
 gui = Tk()
-gui.bind('<Button-1>', click)
-gui.bind('<B1-Motion>', drag)
-line = build_line(Point(x, y), Point(event.x, event.y), "blue")
-gui.bind('<ButtonRelease-1>', release)
 width, height, bg = 800, 800, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
+line_to_cursor = canvas.create_line(-1, -1, -1, -1)
+gui.bind('<Button-1>', click)
+gui.bind('<B1-Motion>', drag)
+gui.bind('<ButtonRelease-1>', release)
 
-a, b, c = Point(300, 200), Point(300, 500), Point(200, 700)
-_a, _b, _c = Point(600, 400), Point(700, 400), Point(300, 800)
+a, b, c = Point(300, 200), Point(600, 400), Point(200, 700)
+_a, _b, _c = Point(800, 800), Point(800, 800), Point(800, 800)
 at, bt, ct = Vector(a, _a), Vector(b, _b), Vector(c, _c)
 resolution = 50
 
