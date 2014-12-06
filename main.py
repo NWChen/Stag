@@ -27,7 +27,7 @@ def release(event):
 		a, b = points[current_point].start, points[current_point+1].start
 		at, bt = points[current_point], points[current_point+1]
 		draw(interpolate(a, b, at, bt, 50))
-		draw(shitty_offset(interpolate(a, b, at, bt,250), 10), "red")
+		draw(offset(interpolate(a, b, at, bt,250), 10), "red")
 		#draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
 		print(current_point)
 
@@ -66,6 +66,11 @@ def offset(sequence, k):
 def shitty_offset(sequence, k):
 	k_sequence = []
 	for t in range(0, len(sequence)-1):
+		dy = sequence[t+1].y - sequence[t].y
+		dx = sequence[t+1].x - sequence[t].x
+		if math.sin(math.atan(float(dy)/dx)) < 0:
+			#inside is  
+			return
 		a, b = sequence[t].x, sequence[t].y
 		x = (sequence[t].x+sequence[t+1].x)/2
 		y = math.sqrt(k*k - (x-a)*(x-a)) + b
