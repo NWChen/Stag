@@ -4,6 +4,7 @@ from tkinter import *
 from Vector import Vector
 
 points, current_point = [], -1
+total_sequence = []
 clicked, x, y = False, -1, -1
 
 def click(event):
@@ -16,20 +17,36 @@ def drag(event):
 	canvas.coords(line_to_cursor, x, y, event.x, event.y)
 	canvas.coords(line_to_cursor_origin, x-2, y-2, x+2, y+2)
 
-
 def release(event):
-	global x, y, points, current_point
+	bb = 10
+	global x, y, points, current_point, velocity
 	points.append(Vector(Point(x, y), Point(event.x, event.y)))
-	if len(points)<=1:
-		return
-	else:
+	if len(points)>1:
 		current_point += 1
 		a, b = points[current_point].start, points[current_point+1].start
 		at, bt = points[current_point], points[current_point+1]
-		draw(interpolate(a, b, at, bt, 50))
-		draw(offset(interpolate(a, b, at, bt,250), 10), "red")
-		#draw(offset(interpolate(a, b, at, bt, 50), 10), "red")
+		draw(interpolate(a, b, at, bt, 100))
+		#draw(offset(interpolate(a, b, at, bt, 250), 30), "red")
+		#draw(offset(interpolate(a, b, at, bt, 250), -30), "red")
 		print(current_point)
+
+	'''
+	for point in total_sequence:
+		canvas.coords(robot, point.x-bb, point.y-bb, point.x+bb, point.y+bb)
+		canvas.after(10)
+		canvas.update()
+	'''
+
+	
+	for i in range(0, len(total_sequence)-1):
+		point = total_sequence[i]
+		dx, dy = total_sequence[i+1].x-total_sequence[i].x, total_sequence[i+1].y-total_sequence[i].y
+		speed = str('%.2f'%math.sqrt(dx*dx+dy*dy))
+		velocity.config(text=speed+" ft/s")
+		canvas.coords(robot, point.x-bb, point.y-bb, point.x+bb, point.y+bb)
+		canvas.after(10)
+		canvas.update()
+	
 
 def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="rectangle":
@@ -41,6 +58,7 @@ def build_line(p, _p, color="blue"):
 	canvas.create_line(p.x, p.y, _p.x, _p.y, fill=color)
 
 def interpolate(p1, p2, t1, t2, steps):
+	global total_sequence
 	sequence = []
 	for t in range(0, steps):
 		s = t/float(steps)
@@ -51,6 +69,7 @@ def interpolate(p1, p2, t1, t2, steps):
 		p = Point(h1*p1.x + h2*p2.x + h3*(t1.end.x-t1.start.x) + h4*(t2.end.x-t2.start.x),
 			h1*p1.y + h2*p2.y + h3*(t1.end.y-t1.start.y) + h4*(t2.end.y-t2.start.y))
 		sequence.append(p)
+		total_sequence.append(p)
 	return sequence
 
 def offset(sequence, k):
@@ -82,11 +101,22 @@ def draw(sequence, color="black"):
 		build_point(point, color)
 
 gui = Tk()
-width, height, bg = 800, 800, "white"
+width, height, bg = 2000, 1000, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
+label = Label(canvas, text="HERMITE SPLINE TRAJECTORY GENERATOR FOR WHEELED ROBOTS", fg="white", bg="#121212", font=("Montserrat",20))
+label2 = Label(canvas, text="FRC Team 2601", fg="white", bg="#E74C3C", font=("Lato",15))
+velocity = Label(canvas, text="0 ft/s", fg="black", bg="white", font=("Lato", 24))
+label.pack()
+label2.pack()
+velocity.pack()
+canvas.create_window(1000, 20, window=label)
+canvas.create_window(1000, 55, window=label2)
+canvas.create_window(width-200, 100, window=velocity)
+
 line_to_cursor_origin = canvas.create_rectangle(-1, -1, -1, -1, fill="red", outline="red")
 line_to_cursor = canvas.create_line(-1, -1, -1, -1)
+robot = canvas.create_rectangle(-1, -1, -1, -1, fill="green", outline="black")
 gui.bind('<Button-1>', click)
 gui.bind('<B1-Motion>', drag)
 gui.bind('<ButtonRelease-1>', release)
