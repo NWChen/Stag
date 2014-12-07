@@ -30,14 +30,6 @@ def release(event):
 		#draw(offset(interpolate(a, b, at, bt, 250), -30), "red")
 		print(current_point)
 
-	'''
-	for point in total_sequence:
-		canvas.coords(robot, point.x-bb, point.y-bb, point.x+bb, point.y+bb)
-		canvas.after(10)
-		canvas.update()
-	'''
-
-	
 	for i in range(0, len(total_sequence)-1):
 		point = total_sequence[i]
 		dx, dy = total_sequence[i+1].x-total_sequence[i].x, total_sequence[i+1].y-total_sequence[i].y
@@ -51,8 +43,7 @@ def release(event):
 def build_point(p, color="black", size=1, shape="circle"):
 	if shape=="rectangle":
 		canvas.create_rectangle(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
-	if shape=="circle":
-		canvas.create_oval(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
+	canvas.create_oval(p.x-size, p.y-size, p.x+size, p.y+size, fill=color, outline=color)
 
 def build_line(p, _p, color="blue"):
 	canvas.create_line(p.x, p.y, _p.x, _p.y, fill=color)
@@ -104,7 +95,7 @@ gui = Tk()
 width, height, bg = 2000, 1000, "white"
 canvas = Canvas(gui, width=width, height=height, bg=bg)
 canvas.grid(row=0, column=0)
-label = Label(canvas, text="HERMITE SPLINE TRAJECTORY GENERATOR FOR WHEELED ROBOTS", fg="white", bg="#121212", font=("Montserrat",20))
+label = Label(canvas, text="spline path builder for robots", fg="white", bg="#121212", font=("Montserrat",20))
 label2 = Label(canvas, text="FRC Team 2601", fg="white", bg="#E74C3C", font=("Lato",15))
 velocity = Label(canvas, text="0 ft/s", fg="black", bg="white", font=("Lato", 24))
 label.pack()
