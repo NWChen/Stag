@@ -73,7 +73,7 @@ def offset(sequence, k):
 		k_sequence.append(Point(x, y))
 	return k_sequence
 
-def shitty_offset(sequence, k):
+def bad_offset(sequence, k):
 	k_sequence = []
 	for t in range(0, len(sequence)-1):
 		dy = sequence[t+1].y - sequence[t].y
